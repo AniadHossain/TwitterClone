@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from microblog import views
+from microblogs import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
