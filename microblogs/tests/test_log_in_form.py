@@ -14,5 +14,6 @@ class LogInFormTestCase(TestCase):
         password_field = form.fields['password']
         password_field = form.fields['password']
         self.assertTrue(isinstance(password_field.widget,forms.PasswordInput))
+        
 
     

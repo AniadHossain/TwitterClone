@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from .forms import SignUpForm
 from .forms import LoginForm
 from microblogs.models import User
+from django.contrib.auth import authenticate, login
 
 
 def home(request):
@@ -25,6 +26,17 @@ def sign_up(request):
     return render(request, 'sign_up.html',{'form':form})
 
 def log_in(request):
+    if(request.method == 'POST'):
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request,user)
+                return redirect('feed')
+            
+    
     form = LoginForm()
     return render(request, 'log_in.html',context={'form':form})
 

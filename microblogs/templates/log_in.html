@@ -4,9 +4,12 @@
     </head>
 
     <body>
-        <h1>Login</h1>
-        <p> <a href = '{%url 'sign_up' %}'>Sign up</a> </p>
-        <p> <a href = '#'>Log out</a> </p>
+        <h1>Sign up to view posts!!</h1>
+        <form action="{% url 'log_in' %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Log in">
+        </form>
         
     </body>
 </html>
