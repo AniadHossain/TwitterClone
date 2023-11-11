@@ -5,6 +5,9 @@
 
     <body>
         <h1>Sign up to view posts!!</h1>
+        {% for message in messages %}
+            <p><b>{{ message }}</b></p>
+        {% endfor %}
         <form action="{% url 'log_in' %}" method="post">
             {% csrf_token %}
             {{ form.as_p }}

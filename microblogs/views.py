@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
+from django.contrib import messages
 from .forms import SignUpForm
 from .forms import LoginForm
 from microblogs.models import User
@@ -35,6 +36,8 @@ def log_in(request):
             if user is not None:
                 login(request,user)
                 return redirect('feed')
+        
+        messages.add_message(request, messages.ERROR, "LOGIN FAILED DUE TO INVALID CREDENTIALS")
             
     
     form = LoginForm()
