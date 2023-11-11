@@ -4,7 +4,7 @@ from django.contrib import messages
 from .forms import SignUpForm
 from .forms import LoginForm
 from microblogs.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 
 def home(request):
@@ -26,6 +26,11 @@ def sign_up(request):
 
     return render(request, 'sign_up.html',{'form':form})
 
+def log_out(request):
+    logout(request)
+    return redirect('home')
+
+
 def log_in(request):
     if(request.method == 'POST'):
         form = LoginForm(request.POST)
@@ -42,6 +47,7 @@ def log_in(request):
     
     form = LoginForm()
     return render(request, 'log_in.html',context={'form':form})
+
 
     
 
