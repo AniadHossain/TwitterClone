@@ -3,7 +3,7 @@ from microblogs.forms import SignUpForm
 from microblogs.models import User
 from django.urls import reverse
 from django.contrib.auth.hashers import check_password
-from .helpers import LogInTester
+from microblogs.tests.helpers import LogInTester
 
 class SignUpViewTestCase(TestCase,LogInTester):
 

@@ -2,7 +2,7 @@ from django.test import TestCase
 from microblogs.forms import LoginForm
 from django.urls import reverse
 from microblogs.models import User
-from .helpers import LogInTester
+from microblogs.tests.helpers import LogInTester
 
 class LogInViewTestCase(TestCase,LogInTester):
 
