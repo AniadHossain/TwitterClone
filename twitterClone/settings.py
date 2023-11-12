@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from django.contrib.messages import constants as message_constants
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -128,3 +129,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'microblogs.User'
 
+#Message level should use Bootstrap terms
+
+MESSAGE_TAGS ={
+    message_constants.DEBUG: 'dark',
+    # message_constants.INFO: 'alert-info',
+    # message_constants.SUCCESS: 'alert-success',
+    # message_constants.WARNING: 'alert-warning',
+    message_constants.ERROR: 'alert-danger',
+}
