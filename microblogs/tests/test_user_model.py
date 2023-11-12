@@ -30,6 +30,7 @@ class UserModelTestCase(TestCase):
         self.user.username = '@' + 'x' * 19
         self._assert_user_is_valid()
 
+
     def test_username_can_be_over_20_characters_long(self):
         self.user.username = '@' + 'x' * 20
         self._assert_user_is_invalid()
@@ -73,5 +74,52 @@ class UserModelTestCase(TestCase):
             self.user.full_clean()
         except ValidationError:
             self.fail("Test user should be valid")
+
+        def test_username_cannot_be_empty(self):
+            self.user.username = ""
+            self._assert_user_is_invalid()
+
+        def test_first_name_cannot_be_empty(self):
+            self.user.first_name = ""
+            self._assert_user_is_invalid()
+
+        def test_last_name_cannot_be_empty(self):
+            self.user.last_name = ""
+            self._assert_user_is_invalid()
+
+        def test_password_cannot_be_empty(self):
+            self.user.password = ""
+            self._assert_user_is_invalid()
+
+        def test_email_must_contain_at_symbol(self):
+            self.user.email = "aniad.hossain.outlook.com"
+            self._assert_user_is_invalid()
+
+        def test_email_must_contain_period(self):
+            self.user.email = "aniad@hossain@outlook@com"
+            self._assert_user_is_invalid()
+
+        def test_email_cannot_be_over_254_characters_long(self):
+            self.user.email = "a" * 247 + "@example.com"
+            self._assert_user_is_valid()
+
+            self.user.email += "a"
+            self._assert_user_is_invalid()
+
+        def test_username_cannot_contain_spaces(self):
+            self.user.username = "aniad hossain"
+            self._assert_user_is_invalid()
+
+        def test_username_cannot_contain_special_characters(self):
+            self.user.username = "aniad$hossain"
+            self._assert_user_is_invalid()
+
+        def test_bio_can_be_empty(self):
+            self.user.bio = ""
+            self._assert_user_is_valid()
+            
+        def test_bio_max_length(self):
+            self.user.bio = 'A' * 520
+            self._assert_user_is_valid()
 
 
