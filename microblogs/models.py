@@ -14,6 +14,7 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=50,blank=False)
     last_name = models.CharField(max_length=50,blank=False)
     bio = models.CharField(max_length=520,blank=True)
+    followers = models.ManyToManyField('self', symmetrical=False, related_name='followees',blank=True)
 
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
@@ -25,6 +26,22 @@ class User(AbstractUser):
     
     def mini_gravatar(self):
         return self.gravatar(size=40)
+    
+    def toggle_follow(self,followee):
+        if self.is_following(followee):
+            followee.followers.remove(self)
+        else:
+            followee.followers.add(self)
+    
+    def is_following(self,user):
+        return user in self.followees.all()
+   
+    def follower_count(self):
+        return self.followers.count()
+    
+    def followee_count(self):
+        return self.followees.count()
+
     
 class Post(models.Model):
 

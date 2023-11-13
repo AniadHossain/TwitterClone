@@ -11,5 +11,31 @@
             "bio":"Chilling",
             "is_active":true
         }
+    },
+    {
+        "model":"microblogs.user",
+        "pk":3,
+        "fields":{
+            "first_name":"Peter",
+            "last_name":"Pickles",
+            "username":"Peter123",
+            "email":"peterpickles@gmail.com",
+            "password":"pbkdf2_sha256$600000$7l9QCGsyFFGqiqtRHKkWOF$9pKql3Gbs27xntwVMF66iR85p0hYEhqjUKhv8p1TK8c=",
+            "bio":"Chilling",
+            "is_active":true
+        }
+    },
+    {
+        "model":"microblogs.user",
+        "pk":4,
+        "fields":{
+            "first_name":"Petra",
+            "last_name":"Pickles",
+            "username":"Petra123",
+            "email":"petrapickles@gmail.com",
+            "password":"pbkdf2_sha256$600000$7l9QCGsyFFGqiqtRHKkWOF$9pKql3Gbs27xntwVMF66iR85p0hYEhqjUKhv8p1TK8c=",
+            "bio":"Chilling",
+            "is_active":true
+        }
     }
 ]
