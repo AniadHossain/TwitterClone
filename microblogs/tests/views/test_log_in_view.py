@@ -6,16 +6,11 @@ from microblogs.tests.helpers import LogInTester
 
 class LogInViewTestCase(TestCase,LogInTester):
 
+    fixtures = ['microblogs/tests/fixtures/default_user.json']
+
     def setUp(self):
         self.url = reverse('log_in')
-        self.user = User.objects.create_user(
-            "AniadHossain",
-            first_name='Aniad',
-            last_name="Hossain",
-            email="aniad.hossain@outlook.com",
-            password="Password123",
-            bio="Chilling"
-        )
+        self.user = User.objects.get(username = "Aniad123")
 
     def test_get_log_in_url(self):
         self.assertEqual(self.url,'/log_in/')
@@ -39,7 +34,7 @@ class LogInViewTestCase(TestCase,LogInTester):
         self.assertFalse(self._is_logged_in())
 
     def test_successful_log_in(self):
-        form_input = {'username':'AniadHossain','password':'Password123'}
+        form_input = {'username':'Aniad123','password':'Password123'}
         response = self.client.post(self.url,form_input,follow=True)
         response_url = reverse('feed')
         self.assertRedirects(response, response_url, status_code=302,target_status_code=200)
@@ -49,7 +44,7 @@ class LogInViewTestCase(TestCase,LogInTester):
     def test_valid_log_in_by_inactive_user(self):
         self.user.is_active = False
         self.user.save()
-        form_input = {'username':'AniadHossain','password':'Password123'}
+        form_input = {'username':'Aniad123','password':'Password123'}
         response = self.client.post(self.url,form_input,follow=True)
 
         self.assertTemplateUsed(response,'log_in.html')

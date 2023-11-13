@@ -6,18 +6,13 @@ from microblogs.models import User
 
 class UserModelTestCase(TestCase):
 
+    fixtures = ['microblogs/tests/fixtures/default_user.json']
     def setUp(self):
-        self.user = User.objects.create_user(
-            "AniadHossain",
-            first_name='Aniad',
-            last_name="Hossain",
-            email="aniad.hossain@outlook.com",
-            password="password123",
-            bio="Chilling"
-        )
+        self.user = User.objects.get(username="Aniad123")
 
     def test_valid_user(self):
         self._assert_user_is_valid()
+        
 
 
     def test_email_cannot_be_empty(self):

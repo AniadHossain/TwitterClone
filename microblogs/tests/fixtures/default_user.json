@@ -1,0 +1,19 @@
+[
+    {
+        "model":"microblogs.user",
+        "pk":1,
+        "fields":{
+            "first_name":"Aniad",
+            "last_name":"Hossain",
+            "username":"Aniad123",
+            "email":"aniad.hossain@gmail.com",
+            "password":"pbkdf2_sha256$600000$7l9QCGsyFFGqiqtRHKkWOF$9pKql3Gbs27xntwVMF66iR85p0hYEhqjUKhv8p1TK8c=",
+            "bio":"Chilling",
+            "is_active":true
+        }
+    }
+]
+
+
+    
+
