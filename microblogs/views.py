@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib import messages
-from .forms import SignUpForm
-from .forms import LoginForm
-from microblogs.models import User
+from .forms import SignUpForm, LoginForm, PostForm
+from microblogs.models import User, Post
 from django.contrib.auth import authenticate, login, logout
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponseForbidden
 
 
 def home(request):
@@ -47,6 +48,35 @@ def log_in(request):
     
     form = LoginForm()
     return render(request, 'log_in.html',context={'form':form})
+
+def show_user(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+    except ObjectDoesNotExist:
+        messages.add_message(request, messages.ERROR, "USER DOES NOT EXIST")
+        return redirect('user_list')
+    else:
+        return render(request, 'show_user.html',{'user': user})
+    
+def user_list(request):
+    users = User.objects.all()
+    return render(request,'user_list.html',{'users':users})
+
+def new_post(request):
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            current_user = request.user
+            form = PostForm(request.POST)
+            if form.is_valid():
+                text = form.cleaned_data.get('text')
+                post = Post.objects.create(author=current_user, text=text)
+                return redirect('feed')
+            else:
+                return render(request, 'feed.html', {'form': form})
+        else:
+            return redirect('log_in')
+    else:
+        return HttpResponseForbidden()
 
 
     
