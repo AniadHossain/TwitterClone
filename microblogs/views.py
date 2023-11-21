@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 def home(request):
     return render(request, 'home.html')
 
+@login_required
 def feed(request):
     form = PostForm()
     return render(request, 'feed.html', {'form':form})
@@ -54,6 +55,7 @@ def log_in(request):
     form = LoginForm()
     return render(request, 'log_in.html',context={'form':form})
 
+@login_required
 def show_user(request, user_id):
     try:
         user = User.objects.get(id=user_id)
