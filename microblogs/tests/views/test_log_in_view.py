@@ -37,6 +37,12 @@ class LogInViewTestCase(TestCase,LogInTester):
         self.assertTrue(isinstance(form,LoginForm))
         self.assertFalse(form.is_bound)
 
+    def test_get_log_in_when_logged_in(self):
+        self.client.login(username='Aniad123',password='Password123')
+        response = self.client.get(self.url, follow=True)
+        self.assertRedirects(response,reverse('feed'),status_code=302,target_status_code=200)
+        self.assertTemplateUsed(response,'feed.html')
+
 
     def test_unsuccessful_log_in(self):
         form_input = {'username':'johndoe','password':'WrongPassword123'}
@@ -63,6 +69,13 @@ class LogInViewTestCase(TestCase,LogInTester):
         self.assertRedirects(response, redirect_url, status_code=302,target_status_code=200)
         self.assertTemplateUsed(response,'user_list.html')
         self.assertTrue(self._is_logged_in())
+
+    def test_post_log_in_when_logged_in(self):
+        self.client.login(username='Aniad123',password='Password123')
+        form_input = {'username':'Wrong123','password':'WrongPassword123'}
+        response = self.client.post(self.url, form_input ,follow=True)
+        self.assertRedirects(response,reverse('feed'),status_code=302,target_status_code=200)
+        self.assertTemplateUsed(response,'feed.html')
 
     def test_valid_log_in_by_inactive_user(self):
         self.user.is_active = False

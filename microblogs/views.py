@@ -8,6 +8,13 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 
+def login_prohibited(view_function):
+    def wrapper(request,*args,**kwargs):
+        if(request.user.is_authenticated):
+            return redirect('feed')
+        else:
+            return view_function(request)
+    return wrapper
 
 def home(request):
     return render(request, 'home.html')
@@ -17,6 +24,7 @@ def feed(request):
     form = PostForm()
     return render(request, 'feed.html', {'form':form})
 
+@login_prohibited
 def sign_up(request):
     if(request.method == 'POST'):
         form = SignUpForm(request.POST)
@@ -34,7 +42,7 @@ def log_out(request):
     logout(request)
     return redirect('home')
 
-
+@login_prohibited
 def log_in(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
