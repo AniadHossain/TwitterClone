@@ -31,29 +31,15 @@ class UserModelTestCase(TestCase):
         self._assert_user_is_invalid()
 
     def test_username_must_be_unique(self):
-        User.objects.create_user(
-            "boob",
-            first_name='bob',
-            last_name="marley",
-            email="bob@outlook.com",
-            password="password1234",
-            bio="bored"
-        )
+        second_user = User.objects.get(username="Jane123")
 
-        self.user.username="boob"
+        self.user.username="Jane123"
         self._assert_user_is_invalid()
 
     def test_email_must_be_unique(self):
-        User.objects.create_user(
-            username="uniqueuser",
-            first_name='John',
-            last_name="Doe",
-            email="unique@example.com",
-            password="password1234",
-            bio="Testing"
-        )
+        second_user = User.objects.get(username="Jane123")
 
-        self.user.email = "unique@example.com"
+        self.user.email = "janedoe@gmail.com"
         self._assert_user_is_invalid()
 
     def test_bio_max_length_exceeded(self):
