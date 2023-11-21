@@ -18,7 +18,7 @@ def feed(request):
     form = PostForm()
     current_user = request.user
     posts = Post.objects.filter(author=current_user)
-    return render(request, 'feed.html', {'form':form, 'posts':posts})
+    return render(request, 'feed.html', {'form':form, 'current_user': current_user, 'posts':posts})
 
 @login_prohibited
 def sign_up(request):
@@ -64,11 +64,17 @@ def show_user(request, user_id):
     try:
         user = User.objects.get(id=user_id)
         posts = Post.objects.filter(author=user)
+        following = request.user.is_following(user)
+        followable = (request.user != user)
     except ObjectDoesNotExist:
-        messages.add_message(request, messages.ERROR, "USER DOES NOT EXIST")
         return redirect('user_list')
     else:
-        return render(request, 'show_user.html',{'user': user, 'posts': posts})
+        return render(request, 'show_user.html',
+            {'user': user,
+             'posts': posts,
+             'following': following,
+             'followable': followable}
+        )
     
 @login_required
 def user_list(request):
