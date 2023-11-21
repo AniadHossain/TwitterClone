@@ -7,14 +7,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
+from .helpers import login_prohibited
 
-def login_prohibited(view_function):
-    def wrapper(request,*args,**kwargs):
-        if(request.user.is_authenticated):
-            return redirect('feed')
-        else:
-            return view_function(request)
-    return wrapper
 
 def home(request):
     return render(request, 'home.html')
