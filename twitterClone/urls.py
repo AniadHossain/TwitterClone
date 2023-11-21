@@ -27,4 +27,5 @@ urlpatterns = [
     path('users/',views.user_list,name='user_list'),
     path('users/<int:user_id>/',views.show_user,name='show_user'),
     path('new_post/',views.new_post,name='new_post'),
+    path('follow_toggle/<int:user_id>',views.follow_toggle,name='follow_toggle'),
 ]
