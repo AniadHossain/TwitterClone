@@ -6,13 +6,15 @@ from microblogs.models import User, Post
 from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseForbidden
+from django.contrib.auth.decorators import login_required
 
 
 def home(request):
     return render(request, 'home.html')
 
 def feed(request):
-    return render(request, 'feed.html')
+    form = PostForm()
+    return render(request, 'feed.html', {'form':form})
 
 def sign_up(request):
     if(request.method == 'POST'):
@@ -33,17 +35,20 @@ def log_out(request):
 
 
 def log_in(request):
-    if(request.method == 'POST'):
+    if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
-                login(request,user)
-                return redirect('feed')
-        
-        messages.add_message(request, messages.ERROR, "LOGIN FAILED DUE TO INVALID CREDENTIALS")
+                login(request, user)
+                redirect_url = request.POST.get('next') or 'feed'
+                return redirect(redirect_url)
+        messages.add_message(request, messages.ERROR, "The credentials provided were invalid!")
+    form = LoginForm()
+    next = request.GET.get('next') or ''
+    return render(request, 'log_in.html', {'form': form,"next":next})
             
     
     form = LoginForm()
@@ -58,6 +63,7 @@ def show_user(request, user_id):
     else:
         return render(request, 'show_user.html',{'user': user})
     
+@login_required
 def user_list(request):
     users = User.objects.all()
     return render(request,'user_list.html',{'users':users})

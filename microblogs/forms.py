@@ -40,10 +40,16 @@ class LoginForm(forms.Form):
     password = forms.CharField(label="password",widget=forms.PasswordInput)
 
 class PostForm(forms.ModelForm):
+    """Form to ask user for post text.
+
+    The post author must be by the post creator.
+    """
+
     class Meta:
+        """Form options."""
 
         model = Post
         fields = ['text']
-        widget = {
-            'text':forms.Textarea()
+        widgets = {
+            'text': forms.Textarea()
         }
