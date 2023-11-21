@@ -61,11 +61,12 @@ def log_in(request):
 def show_user(request, user_id):
     try:
         user = User.objects.get(id=user_id)
+        posts = Post.objects.filter(author=user)
     except ObjectDoesNotExist:
         messages.add_message(request, messages.ERROR, "USER DOES NOT EXIST")
         return redirect('user_list')
     else:
-        return render(request, 'show_user.html',{'user': user})
+        return render(request, 'show_user.html',{'user': user, 'posts': posts})
     
 @login_required
 def user_list(request):
