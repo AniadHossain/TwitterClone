@@ -1,13 +1,15 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib import messages
-from .forms import SignUpForm, LoginForm, PostForm
+from .forms import SignUpForm, LoginForm, PostForm, UserForm, PasswordForm
 from microblogs.models import User, Post
 from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import check_password
 from .helpers import login_prohibited
+
 
 @login_prohibited
 def home(request):
@@ -55,6 +57,36 @@ def log_in(request):
     form = LoginForm()
     next = request.GET.get('next') or ''
     return render(request, 'log_in.html', {'form': form,"next":next})
+
+@login_required
+def password(request):
+    current_user = request.user
+    if request.method == 'POST':
+        form = PasswordForm(data=request.POST)
+        if form.is_valid():
+            password = form.cleaned_data.get('password')
+            if check_password(password, current_user.password):
+                new_password = form.cleaned_data.get('new_password')
+                current_user.set_password(new_password)
+                current_user.save()
+                login(request, current_user)
+                messages.add_message(request, messages.SUCCESS, "Password updated!")
+                return redirect('feed')
+    form = PasswordForm()
+    return render(request, 'password.html', {'form': form})
+
+@login_required
+def profile(request):
+    current_user = request.user
+    if request.method == 'POST':
+        form = UserForm(instance=current_user, data=request.POST)
+        if form.is_valid():
+            messages.add_message(request, messages.SUCCESS, "Profile updated!")
+            form.save()
+            return redirect('feed')
+    else:
+        form = UserForm(instance=current_user)
+    return render(request, 'profile.html', {'form': form})
             
 
 @login_required

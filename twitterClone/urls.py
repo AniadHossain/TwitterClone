@@ -25,7 +25,9 @@ urlpatterns = [
     path('feed/',views.feed,name='feed'),
     path('log_out/',views.log_out,name='log_out'),
     path('users/',views.user_list,name='user_list'),
-    path('users/<int:user_id>/',views.show_user,name='show_user'),
+    path('user/<int:user_id>',views.show_user,name='show_user'),
     path('new_post/',views.new_post,name='new_post'),
+    path('password/', views.password, name='password'),
+    path('profile/', views.profile, name='profile'),
     path('follow_toggle/<int:user_id>',views.follow_toggle,name='follow_toggle'),
 ]
