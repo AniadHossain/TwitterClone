@@ -9,7 +9,7 @@ from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited
 
-
+@login_prohibited
 def home(request):
     return render(request, 'home.html')
 
@@ -17,8 +17,9 @@ def home(request):
 def feed(request):
     form = PostForm()
     current_user = request.user
-    posts = Post.objects.filter(author=current_user)
-    return render(request, 'feed.html', {'form':form, 'current_user': current_user, 'posts':posts})
+    authors = list(current_user.followees.all()) + [current_user]
+    posts = Post.objects.filter(author__in=authors)
+    return render(request, 'feed.html', {'form': form, 'user': current_user, 'posts': posts})
 
 @login_prohibited
 def sign_up(request):
@@ -55,9 +56,6 @@ def log_in(request):
     next = request.GET.get('next') or ''
     return render(request, 'log_in.html', {'form': form,"next":next})
             
-    
-    form = LoginForm()
-    return render(request, 'log_in.html',context={'form':form})
 
 @login_required
 def show_user(request, user_id):
