@@ -8,6 +8,7 @@ from microblogs.models import User, Post
 from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import ObjectDoesNotExist, ImproperlyConfigured
 from django.views.generic.detail import DetailView
+from django.views.generic.list import MultipleObjectMixin
 from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
@@ -83,6 +84,7 @@ class UserListView(LoginRequiredMixin, ListView):
     model = User
     template_name = "user_list.html"
     context_object_name = "users"
+    paginate_by = settings.USERS_PER_PAGE
 
 @login_prohibited
 def home(request):
@@ -94,6 +96,7 @@ class FeedView(LoginRequiredMixin, ListView):
     model = Post
     template_name = "feed.html"
     context_object_name = 'posts'
+    paginate_by = settings.POSTS_PER_PAGE
 
     def get_queryset(self):
         """Return the user's feed."""
@@ -133,16 +136,12 @@ def log_out(request):
 def password(request):
     current_user = request.user
     if request.method == 'POST':
-        form = PasswordForm(data=request.POST)
+        form = PasswordForm(user=current_user, data=request.POST)
         if form.is_valid():
-            password = form.cleaned_data.get('password')
-            if check_password(password, current_user.password):
-                new_password = form.cleaned_data.get('new_password')
-                current_user.set_password(new_password)
-                current_user.save()
-                login(request, current_user)
-                messages.add_message(request, messages.SUCCESS, "Password updated!")
-                return redirect('feed')
+            form.save()
+            login(request, current_user)
+            messages.add_message(request, messages.SUCCESS, "Password updated!")
+            return redirect('feed')
     form = PasswordForm()
     return render(request, 'password.html', {'form': form})
 
@@ -163,20 +162,21 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         messages.add_message(self.request, messages.SUCCESS, "Profile updated!")
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
             
-class ShowUserView(LoginRequiredMixin,DetailView):
+class ShowUserView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
     """View that shows individual user details."""
 
     model = User
     template_name = 'show_user.html'
-    context_object_name = "user"
+    paginate_by = settings.POSTS_PER_PAGE
     pk_url_kwarg = 'user_id'
 
-    def get_context_data(self, *args, **kwargs):
-        """Generate content to be displayed in the template."""
-
-        context = super().get_context_data(*args, **kwargs)
+    def get_context_data(self, **kwargs):
+        """Generate context data to be shown in the template."""
         user = self.get_object()
-        context['posts'] = Post.objects.filter(author=user)
+        posts = Post.objects.filter(author=user)
+        context = super().get_context_data(object_list=posts, **kwargs)
+        context['user'] = user
+        context['posts'] = context['object_list']
         context['following'] = self.request.user.is_following(user)
         context['followable'] = (self.request.user != user)
         return context

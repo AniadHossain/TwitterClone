@@ -44,6 +44,8 @@ class User(AbstractUser):
     
     def followee_count(self):
         return self.followees.count()
+    class Meta:
+        ordering = ['last_name','first_name']
 
     
 class Post(models.Model):
