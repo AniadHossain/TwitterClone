@@ -1,6 +1,6 @@
 # TwitterClone
 
-A fullstack microblogs application created using django for the backend and bootstrap for the frontend.
+A fullstack microblogs application allowing a user to create posts, follow other users and view their posts.
 
 ## Deployed version of the application
 The deployed version of the application can be found at http://hossainaniad.pythonanywhere.com/ .
