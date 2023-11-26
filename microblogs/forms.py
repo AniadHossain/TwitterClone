@@ -1,6 +1,7 @@
 from django import forms
 from .models import User, Post
 from django.core.validators import RegexValidator
+from django.contrib.auth import authenticate
 
 class SignUpForm(forms.ModelForm):
     class Meta:
@@ -38,6 +39,16 @@ class SignUpForm(forms.ModelForm):
 class LoginForm(forms.Form):
     username = forms.CharField(label="username")
     password = forms.CharField(label="password",widget=forms.PasswordInput)
+
+    def get_user(self):
+        """Returns authenticated user if possible."""
+
+        user = None
+        if self.is_valid():
+            username = self.cleaned_data.get('username')
+            password = self.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+        return user
 
 class UserForm(forms.ModelForm):
     """Form to update user profiles."""
